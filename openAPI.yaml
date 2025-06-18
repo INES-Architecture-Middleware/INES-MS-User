@@ -1,6 +1,6 @@
 openapi: 3.0.4
 info:
-  title: Swagger User microservice - OpenAPI 3.0
+  title: INES User microservice - OpenAPI
   description: |-
     This is the documentation for our usser management microservice based on the OpenAPI 3.0 specification. 
     The microservice delivers a complete API that allows to completely manage users. We can create a user, login and logout in our service.
@@ -27,7 +27,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/LoginPayload'
           application/xml:
             schema:
               $ref: '#/components/schemas/User'
@@ -40,10 +40,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserLogin'
             application/xml:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserLogin'
         default:
           description: Unexpected error
           content:
@@ -51,7 +51,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
   /user/login:
-    get:
+    post:
       tags:
         - user
       summary: Logs user into the system.
@@ -73,24 +73,13 @@ paths:
       responses:
         '200':
           description: successful operation
-          headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
-            X-Expires-After:
-              description: date in UTC when token expires
-              schema:
-                type: string
-                format: date-time
           content:
-            application/xml:
-              schema:
-                type: string
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/UserLogin'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/UserLogin'
         '400':
           description: Invalid username/password supplied
         default:
@@ -231,6 +220,23 @@ components:
           example: '12345'
       xml:
         name: user
+    UserLogin:
+      type: object
+      properties:
+        token:
+          type: string
+          example: ovjfzgiofrjgo
+      xml:
+        name: user
+    LoginPayload:
+      type: object
+      properties:
+        username:
+          type: string
+          example: theUser
+        password:
+          type: string
+          example: '12345'
     ApiResponse:
       type: object
       properties:
