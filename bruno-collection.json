@@ -1,0 +1,248 @@
+{
+  "name": "INES User microservice - OpenAPI",
+  "uid": "9QDNvcSNuhu2MEFrIoaWG",
+  "version": "1",
+  "items": [
+    {
+      "uid": "fICvVXXDw39mvPkBIUTzg",
+      "name": "user",
+      "type": "folder",
+      "items": [
+        {
+          "uid": "SD989B6ceF3WKZ1tvhu6L",
+          "name": "Create user.",
+          "type": "http-request",
+          "request": {
+            "url": "{{baseUrl}}/user",
+            "method": "POST",
+            "auth": {
+              "mode": "none",
+              "basic": null,
+              "bearer": null,
+              "digest": null
+            },
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"username\": \"\",\n  \"password\": \"\"\n}",
+              "text": null,
+              "xml": null,
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {
+              "res": null
+            }
+          },
+          "seq": 1
+        },
+        {
+          "uid": "bZ9ysi3uEJgjkaYt4zFO3",
+          "name": "Logs user into the system.",
+          "type": "http-request",
+          "request": {
+            "url": "{{baseUrl}}/user/login",
+            "method": "POST",
+            "auth": {
+              "mode": "none",
+              "basic": null,
+              "bearer": null,
+              "digest": null
+            },
+            "headers": [],
+            "params": [
+              {
+                "uid": "slBbhZa8cjA8vhJlnjkZt",
+                "name": "username",
+                "value": "",
+                "description": "The user name for login",
+                "enabled": false,
+                "type": "query"
+              },
+              {
+                "uid": "gumF2NVkPg66bOmWz4W8t",
+                "name": "password",
+                "value": "",
+                "description": "The password for login in clear text",
+                "enabled": false,
+                "type": "query"
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "json": null,
+              "text": null,
+              "xml": null,
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {
+              "res": null
+            }
+          },
+          "seq": 2
+        },
+        {
+          "uid": "0KLcClirANCYwtNkjgWQC",
+          "name": "Logs out current logged in user session.",
+          "type": "http-request",
+          "request": {
+            "url": "{{baseUrl}}/user/logout",
+            "method": "GET",
+            "auth": {
+              "mode": "none",
+              "basic": null,
+              "bearer": null,
+              "digest": null
+            },
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "json": null,
+              "text": null,
+              "xml": null,
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {
+              "res": null
+            }
+          },
+          "seq": 3
+        },
+        {
+          "uid": "wZ9lWB2CJdEddvTXgNuIh",
+          "name": "Get user by user id.",
+          "type": "http-request",
+          "request": {
+            "url": "{{baseUrl}}/user/:id",
+            "method": "GET",
+            "auth": {
+              "mode": "none",
+              "basic": null,
+              "bearer": null,
+              "digest": null
+            },
+            "headers": [],
+            "params": [
+              {
+                "uid": "so4PwDrEhN99QK1dha7S1",
+                "name": "id",
+                "value": "",
+                "description": "The id that needs to be fetched. Use 1 for testing",
+                "enabled": true,
+                "type": "path"
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "json": null,
+              "text": null,
+              "xml": null,
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {
+              "res": null
+            }
+          },
+          "seq": 4
+        },
+        {
+          "uid": "iIc0Q9ik90kF89W5Btfbw",
+          "name": "Update user resource.",
+          "type": "http-request",
+          "request": {
+            "url": "{{baseUrl}}/user/:id",
+            "method": "PUT",
+            "auth": {
+              "mode": "none",
+              "basic": null,
+              "bearer": null,
+              "digest": null
+            },
+            "headers": [],
+            "params": [
+              {
+                "uid": "SBxBnRz7APSJl7XLdk7kE",
+                "name": "id",
+                "value": "",
+                "description": "name that need to be deleted",
+                "enabled": true,
+                "type": "path"
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"id\": \"\",\n  \"username\": \"\",\n  \"password\": \"\"\n}",
+              "text": null,
+              "xml": null,
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {
+              "res": null
+            }
+          },
+          "seq": 5
+        },
+        {
+          "uid": "6y9XYQX4SwV4ym1APd3Rm",
+          "name": "Delete user resource.",
+          "type": "http-request",
+          "request": {
+            "url": "{{baseUrl}}/user/:id",
+            "method": "DELETE",
+            "auth": {
+              "mode": "none",
+              "basic": null,
+              "bearer": null,
+              "digest": null
+            },
+            "headers": [],
+            "params": [
+              {
+                "uid": "0VRk9yGEjU9xU9fnzkljm",
+                "name": "id",
+                "value": "",
+                "description": "The name that needs to be deleted",
+                "enabled": true,
+                "type": "path"
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "json": null,
+              "text": null,
+              "xml": null,
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {
+              "res": null
+            }
+          },
+          "seq": 6
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "uid": "fZYCuADkVkH2Kw9qDK07D",
+      "name": "Environment 1",
+      "variables": [
+        {
+          "uid": "Kcg1NM3unJUI4UKyk7P5G",
+          "name": "baseUrl",
+          "value": "http://localhost",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        }
+      ]
+    }
+  ]
+}

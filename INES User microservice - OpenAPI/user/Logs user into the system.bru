@@ -1,0 +1,16 @@
+meta {
+  name: Logs user into the system.
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/user/login
+  body: none
+  auth: none
+}
+
+params:query {
+  ~username: 
+  ~password: 
+}
