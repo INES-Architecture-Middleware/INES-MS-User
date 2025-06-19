@@ -3,7 +3,6 @@ import http from "http";
 import { mongoConnection } from './utils/mongoConnection.js';
 
 const app = express();
-// app.use();
 app.use(express.json());
 
 (async () => {
