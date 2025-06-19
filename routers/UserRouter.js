@@ -1,8 +1,6 @@
 import express from 'express';
 
 class UserRouter {
-  router;
-
   constructor(userController) {
     this.router = express.Router();
 
