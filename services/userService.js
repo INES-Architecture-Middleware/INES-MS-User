@@ -1,4 +1,8 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from "bcrypt";
+import uid from "uid-safe";
+import functionsMongo from "../utils/functionsMongo.js";
+import User from "../models/User.js";
 
 class UserService {
   constructor() {
@@ -6,13 +10,104 @@ class UserService {
     this.secretKey = process.env.JWT_SECRET || "fallback-secret-token-for-dev";
   }
 
-  createUser(username, password) {
-    const newUser = {
-      username,
-      password,
-    };
-    this.users.push(newUser);
-    return newUser;
+  createUser(req, res) {
+    if (
+      !req.body ||
+      !req.body.username ||
+      !req.body.password ||
+      !req.body.confirmPassword
+    ) {
+      res.sendStatus(500);
+      return;
+    }
+
+    if (req.body.password !== req.body.confirmPassword) {
+      res.sendStatus(403);
+      return;
+    }
+
+    bcrypt.hash(password, config.saltRounds, async (err, hash) => {
+      if (err) {
+        res.sendStatus(500);
+        return;
+      }
+      uid(18, async (err, verificationToken) => {
+        if (err) {
+          console.log(err);
+          res.sendStatus(500);
+          return;
+        }
+
+        const username = req.body.username.trim();
+        const confirmedPassword = req.body.password.trim();
+        const newUser = {
+          username,
+          password: confirmedPassword,
+        };
+
+        this.generateToken(newUser, async (err, token) => {
+          if (err) {
+            res.sendStatus(500);
+            return;
+          }
+
+          await functionsMongo
+            .insert(User, newUser)
+            .then((res) => {
+              resolve(res);
+            })
+            .catch((err) => {
+              reject(err);
+            });
+          res.json({ token: token, user: newUser });
+        });
+      });
+    });
+  }
+
+  async login(req) {
+    if (!req.body.username || !req.body.password) {
+      res.sendStatus(500);
+      return;
+    }
+
+    const username = req.body.username.trim();
+    const password = req.body.password.trim();
+
+    functionsMongo
+      .findOne(User, username)
+      .then((user) => {
+        if (!user) {
+          res.sendStatus(500);
+          return;
+        }
+
+        bcrypt.compare(password, user.password, (err, match) => {
+          if (err) {
+            res.sendStatus(500);
+            return;
+          }
+
+          if (!match) {
+            res.sendStatus(401);
+            return;
+          }
+
+          this.generateToken(user, async (err, token) => {
+            if (err) {
+              res.sendStatus(500);
+              return;
+            }
+
+            res.json({ token, user });
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+        return;
+      });
   }
 
   validateCredentials(username, password) {
@@ -40,11 +135,11 @@ class UserService {
     }
   }
 
-  getUserById(id) {
-    return this.users.find((user) => user.id === id);
+  async getUserById(id) {
+    return await functionsMongo.findOne(User, { _id: id });
   }
 
-  updateUser(id, username, password) {
+  update(id, username, password) {
     const userIndex = this.users.findIndex((user) => user.id === id);
     if (userIndex !== -1) {
       this.users[userIndex] = { id, username, password };
@@ -53,7 +148,7 @@ class UserService {
     return null;
   }
 
-  deleteUser(id) {
+  delete(id) {
     const userIndex = this.users.findIndex((user) => user.id === id);
     if (userIndex !== -1) {
       this.users.splice(userIndex, 1);

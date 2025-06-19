@@ -7,8 +7,8 @@ class UserController {
 
   async create(req, res) {
     try {
-      const user = await this.userService.createUser(req.body);
-      res.status(200).json(user);
+      const user = await this.userService.createUser(req, res);
+      //   res.status(200).json(user);
     } catch (error) {
       res.status(400).json({ code: "BadRequest", message: error.message });
     }
@@ -16,7 +16,7 @@ class UserController {
 
   async login(req, res) {
     try {
-      const token = await this.userService.loginUser(req.body);
+      const token = await this.userService.login(req.body);
       res.status(200).json({ token });
     } catch (error) {
       res
@@ -36,6 +36,16 @@ class UserController {
       res.status(200).json(user);
     } catch (error) {
       res.status(404).json({ code: "NotFound", message: error.message });
+    }
+  }
+
+  async findOne(req, res) {
+    try {
+      const user = await this.userService.getUserById(req.params.id);
+      if (!user) res.status(400).send("User not found");
+      res.json(user);
+    } catch (error) {
+      res.status(400).json({ code: "BadRequest", message: error.message });
     }
   }
 

@@ -19,7 +19,7 @@ class UserRouter {
     });
 
     this.router
-      .route("/user/:id")
+      .route("/:id")
       .get(async (req, res) => {
         await userController.findOne(req, res);
       })
