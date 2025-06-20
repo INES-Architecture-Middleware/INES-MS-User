@@ -1,0 +1,22 @@
+meta {
+  name: update
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/user/{{id}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "_id": "6855060609e7e3ba5a3041a8",
+    "username": "pedro"
+  }
+}
+
+vars:pre-request {
+  id: 685414da72cc81567f5b6e68
+}
