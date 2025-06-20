@@ -1,7 +1,7 @@
 meta {
   name: all
   type: http
-  seq: 4
+  seq: 5
 }
 
 get {
@@ -12,4 +12,13 @@ get {
 
 vars:pre-request {
   id: 6855060609e7e3ba5a3041a8
+  name: all
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/user
+  body: none
+  auth: none
 }
