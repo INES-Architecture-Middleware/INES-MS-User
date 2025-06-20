@@ -5,7 +5,10 @@ class UserRouter {
     this.router = express.Router();
 
     this.router.route('/').post(async (req, res) => {
-      await userController.create(req, res);
+      await userController.register(req, res);
+    })
+    .get(async (req, res) => {
+      await userController.find(req, res);
     });
 
     this.router.route("/login").post(async (req, res) => {

@@ -1,0 +1,21 @@
+meta {
+  name: delete
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{baseUrl}}/user/{{id}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "_id": "685414da72cc81567f5b6e68"
+  }
+}
+
+vars:pre-request {
+  id: hugo
+}
