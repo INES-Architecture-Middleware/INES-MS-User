@@ -1,19 +1,20 @@
-import User from "../models/User.js";
-import UserService from "../services/UserService.js";
-import functionsMongo from "../utils/functionsMongo.js";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import uid from "uid-safe";
+const User = require("../models/User.js");
+const UserService = require("../services/UserService.js");
+const functionsMongo = require("../utils/functionsMongo.js");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 class UserController {
   constructor() {
     this.userService = new UserService();
   }
 
-  generateToken(userId, cb) {
+  generateToken(userId, isAdmin, passwordChangedDate, cb) {
     const payload = {
       id: userId.toString(),
-      iat: Math.floor(Date.now() / 1000),
+      iat: Date.now(),
+      isAdmin: isAdmin || false,
+      passwordChangedDate : new Date(passwordChangedDate).getTime()
     };
     jwt.sign(payload, process.env.JWT_SECRET, cb);
   }
@@ -46,7 +47,7 @@ class UserController {
             return;
           }
 
-          this.generateToken(user._id, async (err, token) => {
+          this.generateToken(user._id, user.isAdmin, user.passwordChangedDate, async (err, token) => {
             if (err) {
               res.sendStatus(500);
               return;
@@ -68,7 +69,8 @@ class UserController {
       !req.body ||
       !req.body.username ||
       !req.body.password ||
-      !req.body.confirmPassword
+      !req.body.confirmPassword ||
+      !req.body.registerToken
     ) {
       res.sendStatus(500);
       return;
@@ -81,6 +83,7 @@ class UserController {
 
     const username = req.body.username.trim();
     const password = req.body.password.trim();
+    const registerToken = req.body.registerToken.trim();
 
     functionsMongo
       .find(User, { username: username })
@@ -90,35 +93,44 @@ class UserController {
           return;
         }
 
-        bcrypt.hash(password, 10, async (err, hash) => {
-          if (err) {
-            res.sendStatus(500);
-            return;
-          }
-
-          uid(18, async (err, verificationToken) => {
-            if (err) {
-              console.log(err);
-              res.sendStatus(500);
-              return;
+        functionsMongo
+          .findOne(User, {registerToken : registerToken})
+          .then((user) => {
+            if(!user){
+              console.log("Erreur : Le token \"" + registerToken + "\" n'est attribué à aucun utilisateur !")
+              res.sendStatus(500)
+              return
             }
 
-            const newUser = await functionsMongo.insert(User, {
-              username: username,
-              password: hash,
-              //   verificationToken: verificationToken,
-            });
-
-            this.generateToken(newUser._id, async (err, token) => {
+            bcrypt.hash(password, 10, async (err, hash) => {
               if (err) {
                 res.sendStatus(500);
                 return;
               }
+               
+              const newUser = await functionsMongo.update(User, user._id, {
+                username: username,
+                password: hash,
+                registerToken: null,
+                verificationDate:new Date(),
+                passwordChangedDate:new Date(),
+                isAdmin:false
+              });
 
-              res.json({ token: token, user: newUser });
+              this.generateToken(newUser._id, newUser.isAdmin, newUser.passwordChangedDate, async (err, token) => {
+                if (err) {
+                  res.sendStatus(500);
+                  return;
+                }
+
+                res.json({ token: token, user: newUser });
+              });
             });
+          }).catch((err) => {
+            console.log(err);
+            res.sendStatus(500);
+            return;
           });
-        });
       })
       .catch((err) => {
         console.log(err);
@@ -242,4 +254,4 @@ class UserController {
   }
 }
 
-export {UserController};
+module.exports = UserController;

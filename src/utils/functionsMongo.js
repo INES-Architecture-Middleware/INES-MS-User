@@ -111,4 +111,4 @@ functionsMongo.findOne = (
   });
 };
 
-export default functionsMongo;
+module.exports = functionsMongo;

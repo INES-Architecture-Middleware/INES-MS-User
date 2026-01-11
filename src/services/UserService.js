@@ -1,8 +1,8 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from "bcrypt";
-import uid from "uid-safe";
-import functionsMongo from "../utils/functionsMongo.js";
-import User from "../models/User.js";
+const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const uid = require("uid-safe");
+const functionsMongo = require("../utils/functionsMongo.js");
+const User = require("../models/User.js");
 
 class UserService {
   constructor() {
@@ -158,4 +158,4 @@ class UserService {
   }
 }
 
-export default UserService;
+module.exports = UserService;
