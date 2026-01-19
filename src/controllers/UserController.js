@@ -76,7 +76,7 @@ class UserController {
       return;
     }
 
-    if (req.body.password !== req.body.confirmPassword) {
+    if (req.body.password !== req.body.confirmPassword || req.body.password.length < 8) {
       res.sendStatus(403);
       return;
     }
