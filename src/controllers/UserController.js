@@ -104,6 +104,7 @@ class UserController {
 
             bcrypt.hash(password, 10, async (err, hash) => {
               if (err) {
+                console.log("Hash error", err)
                 res.sendStatus(500);
                 return;
               }
@@ -119,6 +120,7 @@ class UserController {
 
               this.generateToken(newUser._id, newUser.isAdmin, newUser.passwordChangedDate, async (err, token) => {
                 if (err) {
+                  console.log("Token error : ", err)
                   res.sendStatus(500);
                   return;
                 }
